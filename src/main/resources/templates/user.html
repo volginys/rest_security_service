@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container-fluid text-light bg-dark">
+    <div class="col-md-12">
+        <ul class="list-inline col-md-12">
+            <li class="list-inline-item" >
+                <div id="authorised_email"></div>
+            </li>
+            <li class="list-inline-item"> with roles: </li>
+            <li class="list-inline-item" >
+                <div id="authorised_roles"></div>
+            </li>
+            <li class="list-inline-item col-md-9">  </li>
+            <li class="list-inline-item text-right" >
+                <a class="list-inline-item text-muted" href="/logout">Sign Out</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav flex-column nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active col-md-12" id="user-page-tab" data-toggle="pill"
+                       href="#user-page" role="tab" aria-controls="user-page" aria-selected="false">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 bg-light">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="user-page" role="tabpanel"
+                     aria-labelledby="user-page-tab">
+                    <div>
+                        <h1>User information-page</h1>
+                    </div>
+                    <div class="panel panel-default tab-content border" id="nav-tabContent2">
+                        <div class="tab-pane fade show active" id="users-info" role="tabpanel" aria-labelledby="users-table-tab">
+                            <div class="container border-bottom">
+                                <h6></h6>
+                                <h4>About user</h4>
+                            </div>
+                            <br/>
+                            <div class="panel-body">
+                                <div class="container">
+                                    <table id="userInfo" class="table table-striped">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+    //------------------------------------------------------
+    // GLOBAL PARAMETERS
+    //------------------------------------------------------
+    const userKeys = ['id','firstName', 'lastName', 'age', 'email', 'password', 'roles']
+    const titles = {id:'ID',
+        firstName:'First name',
+        lastName:'Last name',
+        age:'Age',
+        email:'Email',
+        password:'Password',
+        roles:'Roles'}
+    let roles = [{id: "1", name: "user"},{id: "2", name: "admin"}];
+    const url ='http://localhost:8080';
+    const delay = ms => new Promise(r => setTimeout(() => r(), ms));
+    //------------------------------------------------------
+    // DOCUMENT EDIT FUNCTIONS
+    //------------------------------------------------------
+    const $ = (id) => document.createElement(id);
+    const $_ = (id) => document.createTextNode(id);
+    const $__ = (id) => document.getElementById(id);
+    //------------------------------------------------------
+    // INIT LOGIC
+    //------------------------------------------------------
+    let table2 = $__('userInfo');
+
+    delay(0).then(() => generateUserPageTable(table2));
+    delay(0).then(() => userBage());
+    //------------------------------------------------------
+    // TABLE CREATING FUNCTIONS
+    //------------------------------------------------------
+    async function userBage(){
+        const data = await request(url+'/user/users/auth');
+        let text1 = $_(data['email']);
+        let email = $__('authorised_email');
+        email.appendChild(text1)
+        let text = '';
+        let roleSet = data['roles'];
+        for(let role of roleSet){
+            text += role['name']+' ';
+        }
+        let roles = $__('authorised_roles');
+        let text2 = $_(text);
+        roles.appendChild(text2)
+    }
+    //------------------------------------------------------
+    async function generateUserPageTable(table){
+        const data = await request(url+'/user/users/auth');
+        let row = table.insertRow();
+        insertRowData(row, data);
+        let tableHead = table.createTHead();
+        row = tableHead.insertRow();
+        for(let key of userKeys) {
+            let th = $("th");
+            let text = $_(titles[key]);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+    }
+    //------------------------------------------------------
+    function insertRowData(row, element){
+        for (let key of userKeys) {
+            let cell = row.insertCell();
+            let text = $_(element[key]);
+            if(key === 'roles'){
+                let roles = element[key];
+                for(let role of roles){
+                    text = $_(role['name']+' ');
+                    cell.appendChild(text);
+                }
+            }else {
+                cell.appendChild(text);
+            }
+        }
+    }
+    //------------------------------------------------------
+    //------------------------------------------------------
+    // REQUEST FUNCTIONS
+    //------------------------------------------------------
+    async function request(url, method, body){
+        let response;
+        if((method==='GET')||(method==='')){
+            response = await fetch(url);
+            console.log('успех')
+        } else {
+            response = await fetch(url,{
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: body
+            });
+        }
+        const result = await response.json();
+        console.log('Result:', result);
+        return result;
+    }
+    //------------------------------------------------------
+</script>
+</body>
+</html>
+</html>

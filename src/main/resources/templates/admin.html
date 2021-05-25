@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container-fluid text-light bg-dark">
+    <div class="col-md-12">
+        <ul class="list-inline col-md-12">
+                <li class="list-inline-item" >
+                    <div id="authorised_email"></div>
+                </li>
+                <li class="list-inline-item"> with roles: </li>
+                <li class="list-inline-item" >
+                    <div id="authorised_roles"></div>
+                </li>
+                <li class="list-inline-item col-md-9">  </li>
+                <li class="list-inline-item text-right" >
+                        <a class="list-inline-item text-muted" href="/logout">Sign Out</a>
+                </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 container-fluid">
+            <ul class="nav flex-column nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active col-md-12" id="admin-page-tab" data-toggle="pill"
+                       href="#admin-page" role="tab" aria-controls="admin-page" aria-selected="true">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link col-md-12" id="user-page-tab" data-toggle="pill"
+                       href="#user-page" role="tab" aria-controls="user-page" aria-selected="false">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 bg-light">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="admin-page" role="tabpanel"
+                     aria-labelledby="admin-page-tab">
+                    <div>
+                        <h1>Admin panel</h1>
+                    </div>
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab2" role="tablist">
+                            <a class="nav-item nav-link active" id="users-table-tab" href="#users-table" onclick="selectTab('tab1','tab2')" role="tab"
+                               data-toggle="tab" aria-controls="users-table" aria-selected="true">Users table</a>
+                            <a class="nav-item nav-link" id="new-user-tab" href="#new-user" onclick="selectTab('tab2','tab1')" role="tab"
+                               data-toggle="tab" aria-controls="new-user" aria-selected="false">New User</a>
+                        </div>
+                    </nav>
+                    <div class="panel panel-default tab-content" id="users-table">
+                        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="users-table-tab">
+                            <div class="panel-heading">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab1" role="tablist">
+                                        <div class="nav-item nav-link container-fluid" style="background-color: #f1f1f1"><b style="font-size:21px;">All users</b></div>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="panel-body">
+                                <table id="table1" class="table table-striped">
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default tab-content" id="new-user">
+                        <div class="tab-pane fade" role="tabpanel" id="tab2" aria-labelledby="new-user-tab">
+                            <div class="panel-heading">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab3" role="tablist">
+                                        <div class="nav-item nav-link container-fluid" style="background-color: #f1f1f1">
+                                            <b style="font-size:21px;">Add new user</b>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div id="new-user-panel" class="panel-body col-md-4 mx-auto form-group text-center">
+                                <h4></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade bg-white" id="user-page" role="tabpanel"
+                     aria-labelledby="user-page-tab">
+                    <div>
+                        <h1>User information-page</h1>
+                    </div>
+                    <div class="panel panel-default tab-content border" id="nav-tabContent2">
+                        <div class="tab-pane fade show active" id="users-info" role="tabpanel" aria-labelledby="users-table-tab">
+                            <div class="container border-bottom">
+                                <h6></h6>
+                                <h4>About user</h4>
+                            </div>
+                            <br/>
+                            <div class="panel-body">
+                                <div class="container">
+                                    <table id="userInfo" class="table table-striped">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalEdit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalHead"></h4>
+                <button class="close" data-dismiss="modal" id="closeButton" onclick="closeModal()">x</button>
+            </div>
+            <div id="modalEdit_body" class="modal-body col-md-6 mx-auto form-group text-center">
+            </div>
+            <div id="modalEdit_footer" class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+    //------------------------------------------------------
+    // GLOBAL PARAMETERS
+    //------------------------------------------------------
+    const userKeys = ['id','firstName', 'lastName', 'age', 'email', 'password', 'roles']
+    const titles = {id:'ID',
+                    firstName:'First name',
+                    lastName:'Last name',
+                    age:'Age',
+                    email:'Email',
+                    password:'Password',
+                    roles:'Roles'}
+    let roles = [{id: "1", name: "user"},{id: "2", name: "admin"}];
+    const url ='http://localhost:8080';
+    const delay = ms => new Promise(r => setTimeout(() => r(), ms));
+    //------------------------------------------------------
+    // DOCUMENT EDIT FUNCTIONS
+    //------------------------------------------------------
+    const $ = (id) => document.createElement(id);
+    const $_ = (id) => document.createTextNode(id);
+    const $__ = (id) => document.getElementById(id);
+    //------------------------------------------------------
+    // INIT LOGIC
+    //------------------------------------------------------
+    let table = $__('table1');
+    let table2 = $__('userInfo');
+    delay(0).then(() => refreshTable(table));
+    delay(0).then(() => newUserPanel());
+    delay(0).then(() => generateUserPageTable(table2));
+    delay(0).then(() => userBage());
+    //------------------------------------------------------
+    // TABLE CREATING FUNCTIONS
+    //------------------------------------------------------
+    async function userBage(){
+        const data = await request(url+'/admin/users/auth');
+        let text1 = $_(data['email']);
+        let email = $__('authorised_email');
+        email.appendChild(text1)
+        let text = '';
+        let roleSet = data['roles'];
+        for(let role of roleSet){
+            text += role['name']+' ';
+        }
+        let roles = $__('authorised_roles');
+        let text2 = $_(text);
+        roles.appendChild(text2)
+    }
+    //------------------------------------------------------
+    async function generateUserPageTable(table){
+        const data = await request(url+'/admin/users/auth');
+        let row = table.insertRow();
+        insertRowData(row, data);
+        let tableHead = table.createTHead();
+        row = tableHead.insertRow();
+        for(let key of userKeys) {
+            let th = $("th");
+            let text = $_(titles[key]);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+    }
+    //------------------------------------------------------
+    function generateTableHead(table) {
+        let tableHead = table.createTHead();
+        let row = tableHead.insertRow();
+        for(let key of userKeys) {
+            let th = $("th");
+            let text = $_(titles[key]);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+        let th = $("th");
+        let text = $_('Edit');
+        th.appendChild(text);
+        row.appendChild(th);
+        th = $("th");
+        text = $_('Delete');
+        th.appendChild(text);
+        row.appendChild(th);
+    }
+    //------------------------------------------------------
+    function insertRowData(row, element){
+        for (let key of userKeys) {
+            let cell = row.insertCell();
+            let text = $_(element[key]);
+            if(key === 'roles'){
+                let roles = element[key];
+                for(let role of roles){
+                    text = $_(role['name']+' ');
+                    cell.appendChild(text);
+                }
+            }else {
+                cell.appendChild(text);
+            }
+        }
+    }
+    //------------------------------------------------------
+    function generateTable(table, data) {
+        for (let element of data) {
+            let row = table.insertRow();
+            insertRowData(row, element);
+            let button1 = $('button');
+            editButton(button1, 'Edit','btn btn-info','openModal('+element['id']+',\'update\');'
+                ,null, 'editbutton'+element['id'], 'modal','#modalEdit');
+            let cell = row.insertCell();
+            cell.appendChild(button1);
+            let button2 = $('button');
+            editButton(button2, 'Delete','btn btn-danger','openModal('+element['id']+',\'delete\');'
+                ,null, 'deletebutton'+element['id'], 'modal','#modalEdit');
+            cell = row.insertCell();
+            cell.appendChild(button2);
+        }
+    }
+    //------------------------------------------------------
+    async function refreshTable(table){
+        const data = await request(url+'/admin/users');
+        while(table.hasChildNodes()) {
+            table.removeChild(table.firstChild);
+        }
+        generateTable(table,data);
+        generateTableHead(table);
+    }
+    //------------------------------------------------------
+    // REQUEST FUNCTIONS
+    //------------------------------------------------------
+    async function request(url, method, body){
+        let response;
+        if((method==='GET')||(method==='')){
+            response = await fetch(url);
+            console.log('успех')
+        } else {
+            response = await fetch(url,{
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: body
+            });
+        }
+        const result = await response.json();
+        console.log('Result:', result);
+        return result;
+    }
+    //------------------------------------------------------
+    async function createUser(){
+        let user = makeUser(null,
+            $__('new_user_firstName').value,
+            $__('new_user_lastName').value,
+            $__('new_user_age').value,
+            $__('new_user_email').value,
+            $__('new_user_password').value,
+            getSelectedRoles('new_user_roles'))
+        console.log(user);
+        await request(url+'/admin/users','POST',JSON.stringify(user));
+        await refreshTable(table);
+        $__('users-table-tab').click()
+    }
+    //------------------------------------------------------
+    async function updateUser(id){
+        let user = makeUser($__('edit_user_id').value,
+            $__('edit_user_firstName').value,
+            $__('edit_user_lastName').value,
+            $__('edit_user_age').value,
+            $__('edit_user_email').value,
+            $__('edit_user_password').value,
+            getSelectedRoles('edit_user_roles'));
+        await request(url+'/admin/users/'+id,'PUT', JSON.stringify(user));
+        await refreshTable(table);
+        await closeModal();
+    }
+    //------------------------------------------------------
+    async function deleteUser(id){
+        await request(url+'/admin/users/'+id, 'DELETE', JSON.stringify({id:id}));
+        await refreshTable(table);
+        await closeModal();
+    }
+    //------------------------------------------------------
+    // PANEL EDIT FUNCTIONS
+    //------------------------------------------------------
+    async function selectTab(id1,id2){
+        let tab1 = $__(id1);
+        let tab2 = $__(id2);
+        tab1.setAttribute('class', 'tab-pane fade show active');
+        tab2.setAttribute('class', 'tab-pane fade');
+    }
+    //------------------------------------------------------
+    async function newUserPanel(){
+        let panelBody = $__('new-user-panel');
+        for(let key of userKeys){
+            if((key!='roles')&(key!='id')){
+                editInput(panelBody, 'new_user_'+key, 'text', titles[key], key, '',
+                    "form-control", 'new_user_'+key);
+            }
+            if(key==='roles'){
+                editSelect(panelBody, 'new_user_'+key, null, titles[key], key,
+                    null, "form-control", 'new_user_'+key, 2, "multiple", roles)
+            }
+        }
+        let button = $('button');
+        editButton(button, 'Add new user','btn btn-success','createUser()');
+        panelBody.appendChild(button);
+    }
+    //------------------------------------------------------
+    async function openModal(id,action){
+        const data = await request(url+'/admin/users/'+id);
+        let modalBody = $__('modalEdit_body');
+        let modalFooter = $__('modalEdit_footer');
+            for(let key of userKeys){
+            if((key!='roles')){
+                editInput(modalBody, 'edit_user_'+key, 'text', titles[key], key, data[key],
+                    "form-control", 'edit_user_'+key);
+            } else{
+                editSelect(modalBody, 'edit_user_'+key, null, titles[key], key,
+                    data[key], "form-control", 'edit_user_'+key, 2, "multiple", roles)
+            }
+        }
+        let modalHead = $__('modalHead');
+        let button1 = $('button')
+        let button2 = $('button')
+        let headText;
+        if(action==='update'){
+            headText = $_('Edit user');
+            editButton(button1,'Close','btn btn-danger','closeModal()','modal');
+            editButton(button2, 'Update','btn btn-info','updateUser('+data['id']+')','modal');
+        }
+        if(action==='delete'){
+            headText = $_('Delete user');
+            editButton(button1,'Close','btn btn-secondary','closeModal()','modal');
+            editButton(button2, 'Delete','btn btn-danger','deleteUser('+data['id']+')','modal');
+        }
+        modalHead.appendChild(headText);
+        modalFooter.appendChild(button1);
+        modalFooter.appendChild(button2);
+    }
+    //------------------------------------------------------
+    async function closeModal(){
+        let modalHead = $__('modalHead');
+        let modalBody = $__('modalEdit_body');
+        let modalFooter = $__('modalEdit_footer');
+        while(modalHead.hasChildNodes()) {
+            modalHead.removeChild(modalHead.firstChild);
+        }
+        while(modalBody.hasChildNodes()) {
+            modalBody.removeChild(modalBody.firstChild);
+        }
+        while(modalFooter.hasChildNodes()) {
+            modalFooter.removeChild(modalFooter.firstChild);
+        }
+        $__('closeButton').click()
+    }
+    //------------------------------------------------------
+    // ELEMENT EDIT FUNCTIONS
+    //------------------------------------------------------
+    function getSelectedRoles(id){
+        let selected = Array.from($__(id).options)
+            .filter(option => option.selected)
+            .map(option => option.value);
+        let roleSet = [];
+        for (let id of selected){
+            roleSet.push(roles[id-1]);
+        }
+        return roleSet;
+    }
+    //------------------------------------------------------
+    function editSelect(body, id, type, text, name, value, classAttr, forAttr, size, multi, set){
+        let select = $('select');
+        let br = $('br');
+        let label = $('label')
+        let textNode = $_(text);
+        select.type = type;
+        select.id = id;
+        select.name = name;
+        select.setAttribute('size', size);
+        select.setAttribute('multiple', multi);
+        select.setAttribute('value', "[{},{}]");
+        select.setAttribute('class', classAttr);
+        select.setAttribute('class', classAttr);
+        for(let item of set){
+            let option = $('option');
+            option.setAttribute('name',item['name']);
+            option.setAttribute('value',item['id']);
+            let textOption = $_(item['name']);
+            option.appendChild(textOption);
+            select.appendChild(option);
+        }
+        label.setAttribute('for', forAttr);
+        label.appendChild(textNode);
+        body.appendChild(label);
+        body.appendChild(select);
+        body.appendChild(br);
+    }
+    //------------------------------------------------------
+    function editInput(body, id, type, text, name, value, classAttr, forAttr){
+        let input = $('input');
+        let br = $('br');
+        let label = $('label')
+        let textNode = $_(text);
+        input.type = type;
+        input.id = id;
+        input.name = name;
+        input.setAttribute('value', value);
+        input.setAttribute('class',classAttr);
+        label.setAttribute('for', forAttr);
+        label.appendChild(textNode)
+        body.appendChild(label);
+        body.appendChild(input);
+        body.appendChild(br);
+    }
+    //------------------------------------------------------
+    function editButton(button, text, classAttr, onclick, dataDismiss, id,  dataToggle, dataTarget){
+        let textNode;
+        textNode = $_(text);
+        button.setAttribute('class',classAttr);
+        button.setAttribute('onclick',onclick);
+        button.setAttribute('data-dismiss', dataDismiss);
+        button.id = id;
+        button.setAttribute('data-toggle',dataToggle);
+        button.setAttribute('data-target', dataTarget);
+        button.appendChild(textNode);
+    }
+    //------------------------------------------------------
+    function makeUser(id = null, firstName, lastName, age, email, password, roles) {
+        return {
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            password: password,
+            roles: roles
+        };
+    }
+    //------------------------------------------------------
+</script>
+</body>
+</html>
+</html>
